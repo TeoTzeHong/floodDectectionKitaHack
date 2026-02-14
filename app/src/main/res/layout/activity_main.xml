@@ -1,515 +1,464 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_dark"
-    android:fillViewport="true"
+    android:background="@color/bg_light"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!-- ═══════════════════════════════════ -->
-        <!-- HERO HEADER                         -->
-        <!-- ═══════════════════════════════════ -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/hero_gradient"
-            android:gravity="center"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:padding="16dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="🌊"
-                android:textSize="42sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="FloodWatch"
-                android:textColor="@color/white"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.05" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="AI-Powered Flood Detection &amp; Forecasting"
-                android:textColor="#B0BEC5"
-                android:textSize="12sp" />
-        </LinearLayout>
-
-        <!-- ═══════════════════════════════════ -->
-        <!-- QUICK-ACTION NAVIGATION             -->
-        <!-- ═══════════════════════════════════ -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal">
-
-            <!-- Open Map -->
+            <!-- HEADER -->
             <LinearLayout
-                android:id="@+id/btnOpenMap"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="6dp"
-                android:background="@drawable/quick_action_bg"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🗺️"
-                    android:textSize="28sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="Risk Map"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Live overlays"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-            <!-- Report Flood -->
-            <LinearLayout
-                android:id="@+id/btnNavReport"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginHorizontal="6dp"
-                android:background="@drawable/quick_action_bg"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="📸"
-                    android:textSize="28sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="Report"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="AI-verified"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-            <!-- Check Weather -->
-            <LinearLayout
-                android:id="@+id/btnNavWeather"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="6dp"
-                android:background="@drawable/quick_action_bg"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🌧️"
-                    android:textSize="28sp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:text="Weather"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Live data"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="10sp" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <!-- ═══════════════════════════════════ -->
-        <!-- OVERALL ASSESSMENT (moved to top)   -->
-        <!-- ═══════════════════════════════════ -->
-        <LinearLayout
-            style="@style/CardStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/SectionTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="⚠️ OVERALL ASSESSMENT" />
-
-            <TextView
-                android:id="@+id/tvOverallRisk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/card_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="16dp">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/button_background"
+                    android:backgroundTint="#FFECB3"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_location"
+                    app:tint="#FF6F00" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvLocationTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Bukit Bintang"
+                        android:textColor="@color/text_primary_light"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvLocationSubtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Kuala Lumpur, Malaysia"
+                        android:textColor="@color/text_secondary_light"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/card_rounded_white"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_notification"
+                    app:tint="@color/text_primary_light" />
+            </LinearLayout>
+
+            <!-- STATUS CARD -->
+            <LinearLayout
+                android:id="@+id/cardStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/card_rounded_white"
                 android:gravity="center"
-                android:padding="20dp"
-                android:text="Waiting for analysis..."
-                android:textColor="@color/risk_unknown"
-                android:textSize="18sp"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <ImageView
+                    android:id="@+id/ivStatusIcon"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginBottom="16dp"
+                    android:src="@drawable/ic_launcher_foreground"
+                    app:tint="@color/success_green"
+                    android:background="@drawable/bg_status_safe" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CURRENT STATUS"
+                    android:textColor="@color/text_secondary_light"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.05"/>
+
+                <TextView
+                    android:id="@+id/tvStatusMain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Status: Safe"
+                    android:textColor="@color/text_primary_light"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvStatusDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:text="No active risks detected in your area."
+                    android:textColor="@color/text_secondary_light"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvLastUpdated"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="LAST UPDATED: 2 MINS AGO"
+                    android:textColor="@color/text_secondary_light"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <!-- MAP SECTION -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/card_rounded_white"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Active Risk Map"
+                        android:textColor="@color/text_primary_light"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_status_safe"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="4dp"
+                        android:text="ALL CLEAR"
+                        android:textColor="@color/success_green"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:layout_marginTop="12dp">
+
+                    <!-- Placeholder for Map Image -->
+                    <ImageView
+                        android:id="@+id/ivMapPreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_launcher_background" 
+                        android:background="#E1F5FE"/>
+                    
+                    <Button
+                        android:id="@+id/btnViewMap"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|end"
+                        android:layout_margin="12dp"
+                        android:text="⛶ View Map"
+                        android:backgroundTint="@color/white"
+                        android:textColor="@color/black"
+                        style="@style/Widget.MaterialComponents.Button.TextButton"
+                        android:background="@drawable/card_rounded_white"
+                        android:elevation="4dp"/>
+                </FrameLayout>
+            </LinearLayout>
+
+            <!-- TODAY'S FORECAST -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/card_rounded_white"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Today's Forecast"
+                    android:textColor="@color/text_primary_light"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="bottom">
+                            
+                            <TextView
+                                android:id="@+id/tvCurrentTemp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="29°C"
+                                android:textColor="@color/text_primary_light"
+                                android:textSize="32sp"
+                                android:textStyle="bold" />
+
+                             <TextView
+                                android:id="@+id/tvMinMaxTemp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginBottom="6dp"
+                                android:text="/ 24°C"
+                                android:textColor="@color/text_secondary_light"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+                   </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:orientation="vertical">
+                        
+                         <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@android:drawable/ic_menu_day"
+                            app:tint="#FDD835" />
+
+                        <TextView
+                            android:id="@+id/tvWeatherDesc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Sunny Intervals"
+                            android:textColor="@color/text_secondary_light"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="16dp"
+                    android:background="#E0E0E0" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="RAIN"
+                            android:textColor="@color/text_secondary_light"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvDetailRain"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="5%"
+                            android:textColor="@color/text_primary_light"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="HUMIDITY"
+                            android:textColor="@color/text_secondary_light"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvDetailHumidity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="62%"
+                            android:textColor="@color/text_primary_light"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="WIND"
+                            android:textColor="@color/text_secondary_light"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvDetailWind"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="8km/h"
+                            android:textColor="@color/text_primary_light"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- WEEKLY OUTLOOK -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="12dp"
+                android:text="WEEKLY OUTLOOK"
+                android:textColor="@color/text_secondary_light"
+                android:textSize="12sp"
+                android:letterSpacing="0.1"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tvSafetyTips"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text=""
-                android:textColor="@color/text_secondary"
-                android:textSize="12sp" />
-        </LinearLayout>
+                android:scrollbars="none">
 
-        <!-- ═══════════════════════════════════ -->
-        <!-- IMAGE DETECTION CARD                -->
-        <!-- ═══════════════════════════════════ -->
-        <LinearLayout
-            style="@style/CardStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="vertical">
+                <LinearLayout
+                    android:id="@+id/layoutWeeklyForecast"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
 
-            <TextView
-                style="@style/SectionTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="📸 FLOOD DETECTION" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Upload a photo to detect flooding using AI"
-                android:textColor="@color/text_secondary"
-                android:textSize="11sp" />
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/image_placeholder_bg"
-                android:scaleType="fitCenter" />
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="-112dp"
-                android:layout_marginBottom="76dp"
-                android:visibility="gone" />
-
+            <!-- LOCAL MONITORING -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="12dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-                <Button
-                    android:id="@+id/btnSelectImage"
-                    style="@style/PrimaryButton"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:text="📷 Select Image"
-                    android:textSize="12sp" />
-
-                <Button
-                    android:id="@+id/btnAnalyze"
-                    style="@style/AccentButton"
-                    android:layout_width="0dp"
-                    android:layout_height="48dp"
-                    android:layout_weight="1"
-                    android:enabled="false"
-                    android:text="🔍 Analyze"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/tvDetectionResult"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="Select an image to detect flood"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <!-- ═══════════════════════════════════ -->
-        <!-- WEATHER RISK CARD                   -->
-        <!-- ═══════════════════════════════════ -->
-        <LinearLayout
-            style="@style/CardStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/SectionTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="🌧️ WEATHER &amp; FLOOD RISK" />
-
-            <!-- Weather Info Grid -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:orientation="horizontal">
-
-                <LinearLayout
+                <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:background="@drawable/quick_action_bg"
-                    android:padding="12dp"
-                    android:layout_marginEnd="4dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🌧️"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rain"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="10sp" />
-
-                    <TextView
-                        android:id="@+id/tvRainfall"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="-- mm"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:background="@drawable/quick_action_bg"
-                    android:padding="12dp"
-                    android:layout_marginHorizontal="4dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="💧"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Humidity"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="10sp" />
-
-                    <TextView
-                        android:id="@+id/tvHumidity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="--%"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:background="@drawable/quick_action_bg"
-                    android:padding="12dp"
-                    android:layout_marginStart="4dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🌡️"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Temp"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="10sp" />
-
-                    <TextView
-                        android:id="@+id/tvTemperature"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="--°C"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btnCheckWeather"
-                style="@style/PrimaryButton"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="12dp"
-                android:text="🌍 Check Weather Risk"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/tvWeatherRisk"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="Tap to check weather flood risk"
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <!-- ═══════════════════════════════════ -->
-        <!-- FORECAST CARD                       -->
-        <!-- ═══════════════════════════════════ -->
-        <LinearLayout
-            style="@style/CardStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="16dp"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/SectionTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="🔮 FLOOD FORECAST (MALAYSIA)" />
-
-            <!-- City Selector -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                    android:text="LOCAL MONITORING"
+                    android:textColor="@color/text_secondary_light"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.1"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📍 City: "
-                    android:textColor="@color/text_secondary"
-                    android:textSize="13sp" />
+                    android:text="View All Sensors"
+                    android:textColor="#FF5722"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
 
-                <Spinner
-                    android:id="@+id/spinnerCity"
-                    android:layout_width="0dp"
-                    android:layout_height="40dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="@color/accent" />
             </LinearLayout>
 
-            <Button
-                android:id="@+id/btnFetchForecast"
-                style="@style/PrimaryButton"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="8dp"
-                android:text="🔮 Get Flood Forecast"
-                android:textSize="12sp" />
-
-            <ProgressBar
-                android:id="@+id/progressForecast"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="8dp"
-                android:visibility="gone" />
-
-            <!-- Forecast List Container -->
             <LinearLayout
-                android:id="@+id/forecastContainer"
+                android:id="@+id/layoutMonitorList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
                 android:orientation="vertical" />
 
-            <!-- AI Analysis -->
-            <TextView
-                android:id="@+id/tvAiAnalysis"
+             <!-- Spacer for Bottom Nav -->
+             <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/card_bg"
-                android:padding="12dp"
-                android:text=""
-                android:textColor="@color/text_primary"
-                android:textSize="13sp"
-                android:visibility="gone" />
-        </LinearLayout>
+                android:layout_height="80dp" />
 
-    </LinearLayout>
-</ScrollView>
+        </LinearLayout>
+    </ScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        app:itemIconTint="@color/nav_item_selector"
+        app:itemTextColor="@color/nav_item_selector"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/menu_bottom_nav" />
+
+    <!-- SOS BUTTON - Floating Action Button Style -->
+    <TextView
+        android:id="@+id/btnSOS"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/bg_sos_red"
+        android:elevation="12dp"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+        android:text="SOS"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:shadowColor="#000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="2"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigation"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

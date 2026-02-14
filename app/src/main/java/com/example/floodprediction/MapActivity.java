@@ -18,6 +18,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import org.json.JSONObject;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
@@ -135,7 +137,33 @@ public class MapActivity extends AppCompatActivity {
                 startActivity(new Intent(this, FloodReportActivity.class)));
 
         // Load Initial Data
+        // Load Initial Data
         loadAllCities();
+        
+        setupBottomNavigation();
+    }
+
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigation);
+        bottomNavigationView.setSelectedItemId(R.id.nav_map);
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                startActivity(new Intent(this, MainActivity.class));
+                overridePendingTransition(0, 0);
+                finish();
+                return true;
+            } else if (id == R.id.nav_map) {
+                return true;
+            } else if (id == R.id.nav_resources) {
+                startActivity(new Intent(this, ActivityResources.class));
+                overridePendingTransition(0, 0);
+                finish();
+                return true;
+            }
+            return false;
+        });
     }
 
     // ───────────────────────────────────────

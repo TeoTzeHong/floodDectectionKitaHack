@@ -64,4 +64,5 @@ dependencies {
     implementation(libs.generativeai)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.osmdroid)
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 }

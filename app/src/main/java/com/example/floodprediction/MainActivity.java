@@ -1,81 +1,48 @@
 package com.example.floodprediction;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import java.io.InputStream;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Image Detection views
-    private ImageView imageView;
-    private Button btnSelectImage, btnAnalyze;
-    private ProgressBar progressBar;
-    private TextView tvDetectionResult;
+    // Status Card
+    private TextView tvStatusMain, tvStatusDesc, tvLastUpdated;
+    private ImageView ivStatusIcon;
+    private LinearLayout cardStatus;
 
-    // Weather views
-    private TextView tvRainfall, tvHumidity, tvTemperature;
-    private Button btnCheckWeather;
-    private TextView tvWeatherRisk;
+    // Active Risk Map
+    private Button btnViewMap;
+    
+    // SOS
+    private TextView btnSOS;
 
-    // Forecast views
-    private Spinner spinnerCity;
-    private Button btnFetchForecast;
-    private ProgressBar progressForecast;
-    private LinearLayout forecastContainer;
-    private TextView tvAiAnalysis;
+    // Today's Forecast
+    private TextView tvCurrentTemp, tvMinMaxTemp, tvWeatherDesc;
+    private TextView tvDetailRain, tvDetailHumidity, tvDetailWind;
 
-    // Overall Assessment views
-    private TextView tvOverallRisk, tvSafetyTips;
+    // Weekly Outlook & Monitoring
+    private LinearLayout layoutWeeklyForecast;
+    private LinearLayout layoutMonitorList;
 
-    private Bitmap selectedBitmap;
-
-    // Results tracking
-    private String detectionResult = null;
-    private String detectionSeverity = null;
-    private int weatherRiskScore = -1;
-    private int forecastMaxRisk = -1;
-    private String safetyTip = "";
-
-    private final ActivityResultLauncher<String> pickImage = registerForActivityResult(
-            new ActivityResultContracts.GetContent(),
-            uri -> {
-                if (uri != null) {
-                    try {
-                        imageView.setImageURI(uri);
-                        InputStream inputStream = getContentResolver().openInputStream(uri);
-                        selectedBitmap = BitmapFactory.decodeStream(inputStream);
-                        if (inputStream != null) inputStream.close();
-                        btnAnalyze.setEnabled(true);
-                        tvDetectionResult.setText("Image selected. Tap Analyze to detect flood.");
-                        tvDetectionResult.setTextColor(getResources().getColor(R.color.text_secondary));
-                    } catch (Exception e) {
-                        Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-    );
+    // Bottom Navigation
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,340 +55,171 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Bind views
-        imageView = findViewById(R.id.imageView);
-        btnSelectImage = findViewById(R.id.btnSelectImage);
-        btnAnalyze = findViewById(R.id.btnAnalyze);
-        progressBar = findViewById(R.id.progressBar);
-        tvDetectionResult = findViewById(R.id.tvDetectionResult);
+        // Bind Views
+        bindViews();
 
-        tvRainfall = findViewById(R.id.tvRainfall);
-        tvHumidity = findViewById(R.id.tvHumidity);
-        tvTemperature = findViewById(R.id.tvTemperature);
-        btnCheckWeather = findViewById(R.id.btnCheckWeather);
-        tvWeatherRisk = findViewById(R.id.tvWeatherRisk);
-
-        spinnerCity = findViewById(R.id.spinnerCity);
-        btnFetchForecast = findViewById(R.id.btnFetchForecast);
-        progressForecast = findViewById(R.id.progressForecast);
-        forecastContainer = findViewById(R.id.forecastContainer);
-        tvAiAnalysis = findViewById(R.id.tvAiAnalysis);
-
-        tvOverallRisk = findViewById(R.id.tvOverallRisk);
-        tvSafetyTips = findViewById(R.id.tvSafetyTips);
-
-        // Setup city spinner
-        ArrayAdapter<String> cityAdapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_item, ForecastHelper.MALAYSIA_CITIES);
-        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCity.setAdapter(cityAdapter);
-
-        setupImageDetection();
-        setupWeatherRisk();
-        setupForecast();
-
-        // Quick-action navigation
-        findViewById(R.id.btnOpenMap).setOnClickListener(v ->
-                startActivity(new Intent(this, MapActivity.class)));
-        findViewById(R.id.btnNavReport).setOnClickListener(v ->
-                startActivity(new Intent(this, FloodReportActivity.class)));
-        findViewById(R.id.btnNavWeather).setOnClickListener(v ->
-                btnCheckWeather.performClick());
+        // Setup UI
+        setupStatusCard();
+        setupRiskMap();
+        setupWeatherForecast();
+        setupWeeklyOutlook();
+        setupLocalMonitoring();
+        setupBottomNavigation();
+        setupSOS();
     }
 
-    // ===========================================
-    // IMAGE DETECTION
-    // ===========================================
-    private void setupImageDetection() {
-        btnSelectImage.setOnClickListener(v -> pickImage.launch("image/*"));
+    private void bindViews() {
+        tvStatusMain = findViewById(R.id.tvStatusMain);
+        tvStatusDesc = findViewById(R.id.tvStatusDesc);
+        tvLastUpdated = findViewById(R.id.tvLastUpdated);
+        ivStatusIcon = findViewById(R.id.ivStatusIcon);
+        cardStatus = findViewById(R.id.cardStatus);
 
-        btnAnalyze.setOnClickListener(v -> {
-            if (selectedBitmap != null) {
-                progressBar.setVisibility(View.VISIBLE);
-                btnAnalyze.setEnabled(false);
-                tvDetectionResult.setText("🔍 Analyzing image with AI...");
+        btnViewMap = findViewById(R.id.btnViewMap);
+        btnSOS = findViewById(R.id.btnSOS);
 
-                new GeminiHelper().analyzeFloodImage(
-                        BuildConfig.API_KEY,
-                        selectedBitmap,
-                        response -> {
-                            runOnUiThread(() -> {
-                                progressBar.setVisibility(View.GONE);
-                                btnAnalyze.setEnabled(true);
-                                tvDetectionResult.setText(response);
-                                parseDetectionResult(response);
-                                updateOverallAssessment();
-                            });
-                            return null;
-                        }
-                );
-            }
+        tvCurrentTemp = findViewById(R.id.tvCurrentTemp);
+        tvMinMaxTemp = findViewById(R.id.tvMinMaxTemp);
+        tvWeatherDesc = findViewById(R.id.tvWeatherDesc);
+        tvDetailRain = findViewById(R.id.tvDetailRain);
+        tvDetailHumidity = findViewById(R.id.tvDetailHumidity);
+        tvDetailWind = findViewById(R.id.tvDetailWind);
+
+        layoutWeeklyForecast = findViewById(R.id.layoutWeeklyForecast);
+        layoutMonitorList = findViewById(R.id.layoutMonitorList);
+        bottomNavigationView = findViewById(R.id.bottomNavigation);
+    }
+
+    private void setupStatusCard() {
+        // Initial Mock Data - In real app, this comes from an aggregator logic
+        tvStatusMain.setText("Status: Safe");
+        tvStatusDesc.setText("No acti       ve risks detected in your area.");
+        tvLastUpdated.setText("LAST UPDATED: 2 MINS AGO");
+        ivStatusIcon.setBackgroundResource(R.drawable.bg_status_safe);
+        ivStatusIcon.setImageResource(R.drawable.ic_launcher_foreground); // Replace with checkmark if avail
+        ivStatusIcon.setColorFilter(getResources().getColor(R.color.success_green));
+    }
+
+    private void setupRiskMap() {
+        btnViewMap.setOnClickListener(v -> startActivity(new Intent(this, MapActivity.class)));
+    }
+
+    private void setupSOS() {
+        btnSOS.setOnClickListener(v -> {
+            // Navigate to SOS Activity
+            startActivity(new Intent(this, ActivitySOS.class));
         });
     }
 
-    // ===========================================
-    // WEATHER RISK
-    // ===========================================
-    private void setupWeatherRisk() {
-        btnCheckWeather.setOnClickListener(v -> {
-            btnCheckWeather.setEnabled(false);
-            tvWeatherRisk.setText("🌍 Fetching weather data...");
+    private void setupWeatherForecast() {
+        // Fetch weather for "Kuala Lumpur" (hardcoded to match UI for now)
+        String weatherApiKey = BuildConfig.WEATHER_API_KEY;
+        WeatherHelper weatherHelper = new WeatherHelper();
 
-            String weatherApiKey = BuildConfig.WEATHER_API_KEY;
-            WeatherHelper weatherHelper = new WeatherHelper();
-
-            WeatherHelper.WeatherCallback callback = new WeatherHelper.WeatherCallback() {
-                @Override
-                public void onResult(WeatherHelper.WeatherData data) {
-                    displayWeatherResult(data);
-                    btnCheckWeather.setEnabled(true);
-                }
-
-                @Override
-                public void onError(String error) {
-                    tvWeatherRisk.setText("❌ " + error);
-                    btnCheckWeather.setEnabled(true);
-                }
-            };
-
-            if (weatherApiKey.isEmpty()) {
-                weatherHelper.fetchDemoWeather(callback);
-            } else {
-                String city = spinnerCity.getSelectedItem().toString();
-                weatherHelper.fetchWeather(weatherApiKey, city, callback);
+        WeatherHelper.WeatherCallback callback = new WeatherHelper.WeatherCallback() {
+            @Override
+            public void onResult(WeatherHelper.WeatherData data) {
+                runOnUiThread(() -> {
+                    tvCurrentTemp.setText(String.format("%.0f°C", data.temperature));
+                    tvMinMaxTemp.setText(String.format("/ %.0f°C", data.temperature - 5)); // Mock min
+                    tvDetailRain.setText(String.format("%.0fmm", data.rainfall));
+                    tvDetailHumidity.setText(data.humidity + "%");
+                    // Wind not in data object? Check WeatherHelper. Assuming it might be there or I mock it.
+                    tvDetailWind.setText("8km/h"); 
+                    tvWeatherDesc.setText(data.description);
+                });
             }
-        });
+
+            @Override
+            public void onError(String error) {
+                // Fail silently or show toast
+            }
+        };
+
+        if (weatherApiKey.isEmpty()) {
+            weatherHelper.fetchDemoWeather(callback);
+        } else {
+            // Hardcode city for now as spinner is removed
+            weatherHelper.fetchWeather(weatherApiKey, "Kuala Lumpur", callback);
+        }
     }
 
-    // ===========================================
-    // FORECAST
-    // ===========================================
-    private void setupForecast() {
-        btnFetchForecast.setOnClickListener(v -> {
-            btnFetchForecast.setEnabled(false);
-            progressForecast.setVisibility(View.VISIBLE);
-            forecastContainer.removeAllViews();
-            tvAiAnalysis.setVisibility(View.GONE);
-
-            String city = spinnerCity.getSelectedItem().toString();
-            String weatherApiKey = BuildConfig.WEATHER_API_KEY;
-            ForecastHelper forecastHelper = new ForecastHelper();
-
-            ForecastHelper.ForecastCallback callback = new ForecastHelper.ForecastCallback() {
-                @Override
-                public void onResult(List<ForecastHelper.ForecastItem> items) {
-                    progressForecast.setVisibility(View.GONE);
-                    btnFetchForecast.setEnabled(true);
-                    displayForecast(items);
-
-                    // Send to Gemini for AI analysis
-                    String summary = ForecastHelper.buildForecastSummary(city, items);
-                    analyzeWithGemini(city, summary);
-
-                    // Track max risk for overall assessment
-                    forecastMaxRisk = 0;
-                    for (ForecastHelper.ForecastItem item : items) {
-                        if (item.floodRiskScore > forecastMaxRisk) {
-                            forecastMaxRisk = item.floodRiskScore;
-                        }
-                    }
-                    updateOverallAssessment();
-                }
-
-                @Override
-                public void onError(String error) {
-                    progressForecast.setVisibility(View.GONE);
-                    btnFetchForecast.setEnabled(true);
-                    Toast.makeText(MainActivity.this, error, Toast.LENGTH_LONG).show();
-                }
-            };
-
-            if (weatherApiKey.isEmpty()) {
-                forecastHelper.fetchDemoForecast(callback);
-            } else {
-                forecastHelper.fetchForecast(weatherApiKey, city, callback);
-            }
-        });
-    }
-
-    private void displayForecast(List<ForecastHelper.ForecastItem> items) {
-        forecastContainer.removeAllViews();
+    private void setupWeeklyOutlook() {
+        // Mock Data for Weekly Outlook
+        layoutWeeklyForecast.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
 
-        for (ForecastHelper.ForecastItem item : items) {
-            View card = inflater.inflate(R.layout.item_forecast, forecastContainer, false);
+        // Days: Mon, Tue, Wed, Thu, Fri
+        String[] days = {"Mon", "Tue", "Wed", "Thu", "Fri"};
+        String[] temps = {"31°", "29°", "28°", "30°", "32°"};
+        String[] probs = {"5%", "15%", "20%", "10%", "5%"};
 
-            TextView tvTime = card.findViewById(R.id.tvForecastTime);
-            TextView tvDesc = card.findViewById(R.id.tvForecastDesc);
-            TextView tvTemp = card.findViewById(R.id.tvForecastTemp);
-            TextView tvRain = card.findViewById(R.id.tvForecastRain);
-            TextView tvWind = card.findViewById(R.id.tvForecastWind);
-            TextView tvHumid = card.findViewById(R.id.tvForecastHumidity);
-            TextView tvWindLevel = card.findViewById(R.id.tvForecastWindLevel);
-            TextView tvRisk = card.findViewById(R.id.tvForecastRisk);
+        for (int i = 0; i < days.length; i++) {
+            View itemView = inflater.inflate(R.layout.item_weekly_forecast, layoutWeeklyForecast, false);
+            TextView tvDay = itemView.findViewById(R.id.tvDayName);
+            TextView tvTemp = itemView.findViewById(R.id.tvTemp);
+            TextView tvProb = itemView.findViewById(R.id.tvProb);
 
-            tvTime.setText(item.dateTime);
-            tvDesc.setText(item.description);
-            tvTemp.setText(String.format("🌡️ %.0f°C", item.temperature));
-            tvRain.setText(String.format("🌧️ %.0fmm", item.rainfall));
-            tvWind.setText(String.format("💨 %.0fm/s", item.windSpeed));
-            tvHumid.setText("💧 " + item.humidity + "%");
-            tvWindLevel.setText(item.windLevel);
-            tvRisk.setText("Risk: " + item.floodRiskScore + "/100");
+            tvDay.setText(days[i]);
+            tvTemp.setText(temps[i]);
+            tvProb.setText(probs[i]);
 
-            // Color the risk based on level
-            int riskColor;
-            switch (item.floodRiskLevel) {
-                case "HIGH":
-                    riskColor = R.color.risk_high;
-                    break;
-                case "MEDIUM":
-                    riskColor = R.color.risk_medium;
-                    break;
-                default:
-                    riskColor = R.color.risk_low;
-                    break;
-            }
-            tvRisk.setTextColor(getResources().getColor(riskColor));
-
-            forecastContainer.addView(card);
+            layoutWeeklyForecast.addView(itemView);
         }
     }
 
-    private void analyzeWithGemini(String city, String forecastSummary) {
-        tvAiAnalysis.setVisibility(View.VISIBLE);
-        tvAiAnalysis.setText("🤖 AI is analyzing the forecast...");
+    private void setupLocalMonitoring() {
+        layoutMonitorList.removeAllViews();
+        LayoutInflater inflater = LayoutInflater.from(this);
 
-        String prompt = "You are a flood prediction expert for Malaysia.\n\n"
-                + "Analyze this weather forecast and provide:\n"
-                + "1. FLOOD_RISK: HIGH, MEDIUM, or LOW\n"
-                + "2. PEAK_DANGER_TIME: when the flood risk is highest\n"
-                + "3. WIND_ASSESSMENT: how serious the wind is\n"
-                + "4. FLOOD_PREDICTION: will flooding likely occur? When?\n"
-                + "5. SUGGESTIONS: 3-4 specific actions for people in " + city + "\n\n"
-                + "Keep your response concise and practical.\n\n"
-                + forecastSummary;
-
-        new GeminiHelper().generateContent(
-                BuildConfig.API_KEY,
-                prompt,
-                response -> {
-                    runOnUiThread(() -> {
-                        tvAiAnalysis.setText("🤖 AI Flood Analysis:\n\n" + response);
-                    });
-                    return null;
-                }
-        );
+        // Item 1: Klang River
+        addMonitorItem(inflater, "Klang River", "STATION: MASJID JAMEK", "NORMAL", "2.1m / 4.5m", true);
+        
+        // Item 2: Gombak River (Using SOS red style for demo?) Design said SOS in Red Circle but status is SOS.
+        addMonitorItem(inflater, "Gombak River", "STATION: JALAN TUN RAZAK", "SOS", "Warning Level", false);
     }
 
-    // ===========================================
-    // HELPERS
-    // ===========================================
-    private void displayWeatherResult(WeatherHelper.WeatherData data) {
-        tvRainfall.setText(String.format("%.1f mm", data.rainfall));
-        tvHumidity.setText(data.humidity + "%");
-        tvTemperature.setText(String.format("%.1f°C", data.temperature));
+    private void addMonitorItem(LayoutInflater inflater, String name, String station, String status, String level, boolean isSafe) {
+        View itemView = inflater.inflate(R.layout.item_river_level, layoutMonitorList, false);
+        TextView tvName = itemView.findViewById(R.id.tvRiverName);
+        TextView tvStation = itemView.findViewById(R.id.tvStationName);
+        TextView tvBadge = itemView.findViewById(R.id.tvStatusBadge);
+        TextView tvLevel = itemView.findViewById(R.id.tvWaterLevel);
 
-        int riskColor;
-        String riskEmoji;
-        switch (data.riskLevel) {
-            case "HIGH":
-                riskColor = R.color.risk_high;
-                riskEmoji = "🔴";
-                break;
-            case "MEDIUM":
-                riskColor = R.color.risk_medium;
-                riskEmoji = "🟡";
-                break;
-            default:
-                riskColor = R.color.risk_low;
-                riskEmoji = "🟢";
-                break;
-        }
+        tvName.setText(name);
+        tvStation.setText(station);
+        tvBadge.setText(status);
+        tvLevel.setText(level);
 
-        tvWeatherRisk.setText(riskEmoji + " Risk Score: " + data.riskScore + "/100 (" + data.riskLevel + ")\n"
-                + "📋 " + data.description);
-        tvWeatherRisk.setTextColor(getResources().getColor(riskColor));
-
-        weatherRiskScore = data.riskScore;
-        updateOverallAssessment();
-    }
-
-    private void parseDetectionResult(String response) {
-        String upper = response.toUpperCase();
-        if (upper.contains("FLOOD_DETECTED: YES") || upper.contains("FLOOD_DETECTED:YES")) {
-            detectionResult = "YES";
-        } else if (upper.contains("FLOOD_DETECTED: NO") || upper.contains("FLOOD_DETECTED:NO")) {
-            detectionResult = "NO";
-        }
-
-        if (upper.contains("SEVERITY: HIGH") || upper.contains("SEVERITY:HIGH")) {
-            detectionSeverity = "HIGH";
-        } else if (upper.contains("SEVERITY: MEDIUM") || upper.contains("SEVERITY:MEDIUM")) {
-            detectionSeverity = "MEDIUM";
-        } else if (upper.contains("SEVERITY: LOW") || upper.contains("SEVERITY:LOW")) {
-            detectionSeverity = "LOW";
-        }
-
-        int tipIndex = upper.indexOf("SAFETY_TIP:");
-        if (tipIndex != -1) {
-            safetyTip = response.substring(tipIndex + 11).trim();
-            int newlineIndex = safetyTip.indexOf('\n');
-            if (newlineIndex != -1) safetyTip = safetyTip.substring(0, newlineIndex);
-        }
-    }
-
-    private void updateOverallAssessment() {
-        boolean hasDetection = detectionResult != null;
-        boolean hasWeather = weatherRiskScore >= 0;
-        boolean hasForecast = forecastMaxRisk >= 0;
-
-        if (!hasDetection && !hasWeather && !hasForecast) {
-            tvOverallRisk.setText("Waiting for analysis...");
-            tvOverallRisk.setTextColor(getResources().getColor(R.color.risk_unknown));
-            return;
-        }
-
-        // Determine max risk from all sources
-        int maxRisk = 0;
-        if (hasDetection && "YES".equals(detectionResult)) {
-            maxRisk = "HIGH".equals(detectionSeverity) ? 90 : 60;
-        }
-        if (hasWeather) maxRisk = Math.max(maxRisk, weatherRiskScore);
-        if (hasForecast) maxRisk = Math.max(maxRisk, forecastMaxRisk);
-
-        String overallLevel;
-        int overallColor;
-        if (maxRisk >= 60) {
-            overallLevel = "🔴 HIGH FLOOD RISK";
-            overallColor = R.color.risk_high;
-        } else if (maxRisk >= 30) {
-            overallLevel = "🟡 MODERATE FLOOD RISK";
-            overallColor = R.color.risk_medium;
+        if (isSafe) {
+            tvBadge.setBackgroundResource(R.drawable.bg_status_safe);
+            tvBadge.setTextColor(getResources().getColor(R.color.success_green));
         } else {
-            overallLevel = "🟢 LOW RISK - SAFE";
-            overallColor = R.color.risk_low;
+            // For danger/SOS
+            tvBadge.setBackgroundResource(R.drawable.bg_status_warning); 
+            tvBadge.setTextColor(getResources().getColor(R.color.risk_high)); 
         }
 
-        tvOverallRisk.setText(overallLevel + "\nCombined Score: " + maxRisk + "/100");
-        tvOverallRisk.setTextColor(getResources().getColor(overallColor));
+        layoutMonitorList.addView(itemView);
+    }
 
-        // Safety tips
-        StringBuilder tips = new StringBuilder();
-        if (!safetyTip.isEmpty()) {
-            tips.append("💡 ").append(safetyTip);
-        }
-        if (maxRisk >= 60) {
-            if (tips.length() > 0) tips.append("\n");
-            tips.append("🚨 FLOOD WARNING: Avoid low-lying areas and stay updated on local news.");
-        } else if (maxRisk >= 30) {
-            if (tips.length() > 0) tips.append("\n");
-            tips.append("⚠️ Stay alert and monitor weather conditions closely.");
-        }
-        if (hasForecast && forecastMaxRisk >= 40) {
-            if (tips.length() > 0) tips.append("\n");
-            tips.append("🔮 Check the AI forecast analysis above for detailed predictions.");
-        }
-        tvSafetyTips.setText(tips.toString());
+    private void setupBottomNavigation() {
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                // Already here
+                return true;
+            } else if (id == R.id.nav_map) {
+                startActivity(new Intent(this, MapActivity.class));
+                return true;
+            } else if (id == R.id.nav_resources) {
+                Toast.makeText(this, "Opening Resources...", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, ActivityResources.class));
+                return true;
+            }
+            // Add other activities if they exist
+            return false;
+        });
+        bottomNavigationView.setSelectedItemId(R.id.nav_home);
     }
 }

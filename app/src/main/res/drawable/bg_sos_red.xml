@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <solid android:color="#D50000" /> <!-- Bright Red for High Visibility -->
+    <stroke
+        android:width="2dp"
+        android:color="#FF8A80" /> <!-- Lighter red stroke for contrast -->
+    <size
+        android:width="72dp"
+        android:height="72dp" />
+</shape>
