@@ -4,6 +4,7 @@ import java.io.FileInputStream
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.google.services)
 }
 
 val localProperties = Properties()
@@ -14,11 +15,13 @@ if (localPropertiesFile.exists()) {
 
 android {
     namespace = "com.example.floodprediction"
-    compileSdk = 36
+    compileSdk {
+        version = release(36)
+    }
 
     defaultConfig {
         applicationId = "com.example.floodprediction"
-        minSdk = 26
+        minSdk = 24
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -62,5 +65,13 @@ dependencies {
     implementation(libs.generativeai)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.osmdroid)
-    implementation("com.google.android.gms:play-services-location:21.0.1")
+    
+    // Maps & Location
+    implementation(libs.play.services.location)
+
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.auth)
 }

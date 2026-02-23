@@ -8,7 +8,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottomNavigation"
         android:orientation="vertical">
 
         <!-- Header -->
@@ -197,24 +196,12 @@
         android:layout_centerInParent="true"
         android:visibility="gone" />
 
-    <!-- Bottom Navigation -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#FFFFFF"
-        app:itemIconTint="@color/nav_item_selector"
-        app:itemTextColor="@color/nav_item_selector"
-        app:labelVisibilityMode="labeled"
-        app:menu="@menu/menu_bottom_nav" />
-
     <!-- Detail Panel (Bottom Overlay) -->
     <LinearLayout
         android:id="@+id/detailPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/bottomNavigation"
+        android:layout_alignParentBottom="true"
         android:layout_margin="12dp"
         android:background="@drawable/card_bg"
         android:elevation="12dp"

@@ -31,29 +31,4 @@
     <color name="hero_gradient_end">#1A237E</color>
     <color name="btn_report">#E53935</color>
     <color name="btn_heatmap">#E65100</color>
-
-    <!-- Redesign Light Theme Colors -->
-    <color name="bg_light">#F5F5F5</color>
-    <color name="card_white">#FFFFFF</color>
-    <color name="text_primary_light">#212121</color>
-    <color name="text_secondary_light">#757575</color>
-    <color name="accent_blue">#2196F3</color>
-    <color name="status_green_bg">#C8E6C9</color>
-    <color name="status_red_bg">#FFCDD2</color>
-    <color name="nav_item_selected">#FF5722</color>
-    <color name="nav_item_unselected">#9E9E9E</color>
-
-    <!-- Weather Metric Severity Backgrounds -->
-    <color name="metric_safe_bg">#E8F5E9</color>
-    <color name="metric_warn_bg">#FFF3E0</color>
-    <color name="metric_danger_bg">#FFEBEE</color>
-
-    <!-- Weather Metric Severity Text -->
-    <color name="metric_safe_text">#2E7D32</color>
-    <color name="metric_warn_text">#E65100</color>
-    <color name="metric_danger_text">#C62828</color>
-
-    <!-- Status Card Backgrounds -->
-    <color name="status_warn_bg">#FFE0B2</color>
-    <color name="status_danger_bg">#FFCDD2</color>
 </resources>

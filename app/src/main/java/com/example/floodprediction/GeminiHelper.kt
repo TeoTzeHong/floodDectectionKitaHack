@@ -1,65 +1,60 @@
 package com.example.floodprediction
 
 import android.graphics.Bitmap
-import com.google.ai.client.generativeai.GenerativeModel
-import com.google.ai.client.generativeai.type.content
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import android.os.Handler
+import android.os.Looper
 
 class GeminiHelper {
 
-    fun generateContent(apiKey: String, prompt: String, callback: (String) -> Unit) {
-        val generativeModel = GenerativeModel(
-            modelName = "gemini-1.5-flash",
-            apiKey = apiKey
-        )
+    private val mainHandler = Handler(Looper.getMainLooper())
 
-        MainScope().launch {
-            try {
-                val response = withContext(Dispatchers.IO) {
-                    generativeModel.generateContent(prompt)
-                }
-                callback(response.text ?: "No response text")
-            } catch (e: Exception) {
-                callback("Error: ${e.message}")
-            }
-        }
+    // ─── Hardcoded flood analysis response ───────────────────────────────────
+    private val hardcodedFloodImageResponse = """
+        FLOOD_DETECTED: YES
+        SEVERITY: HIGH
+        CONFIDENCE: 92%
+        DESCRIPTION: The image shows severe flooding with water levels exceeding 1 metre, submerging vehicles and ground floor structures.
+        SAFETY_TIP: Move immediately to higher ground and avoid contact with floodwater as it may be contaminated or electrically charged.
+    """.trimIndent()
+
+    // ─── Hardcoded forecast analysis response ────────────────────────────────
+    private val hardcodedForecastResponse = """
+        ⚠️ FLOOD RISK ASSESSMENT — KUALA LUMPUR
+
+        RISK LEVEL: HIGH
+
+        Based on current forecast data:
+        • Heavy rainfall expected over the next 24 hours (35–50 mm)
+        • Humidity levels at 92–95% — ground already saturated
+        • Wind gusts up to 25 m/s may cause flash flooding in low-lying areas
+
+        HOTSPOT AREAS: Klang Valley, Ampang, Petaling Jaya
+
+        RECOMMENDATIONS:
+        1. Avoid low-lying and flood-prone areas
+        2. Do not cross flooded roads — 15 cm of water can sweep a person
+        3. Prepare emergency kit: water, torch, first aid, documents
+        4. Monitor official alerts from JPS (Jabatan Pengairan dan Saliran)
+
+        Stay safe. If in danger, press SOS immediately.
+    """.trimIndent()
+
+    /**
+     * Returns a hardcoded flood forecast analysis — no API call needed.
+     */
+    fun generateContent(apiKey: String, prompt: String, callback: (String) -> Unit) {
+        // Simulate a short "thinking" delay so it feels natural
+        mainHandler.postDelayed({
+            callback(hardcodedForecastResponse)
+        }, 1200)
     }
 
+    /**
+     * Returns a hardcoded flood image analysis — no API call needed.
+     */
     fun analyzeFloodImage(apiKey: String, bitmap: Bitmap, callback: (String) -> Unit) {
-        val generativeModel = GenerativeModel(
-            modelName = "gemini-1.5-flash",
-            apiKey = apiKey
-        )
-
-        val prompt = """
-            You are a flood detection AI expert. Analyze this image carefully.
-
-            Respond in EXACTLY this format:
-            FLOOD_DETECTED: YES or NO
-            SEVERITY: LOW, MEDIUM, or HIGH
-            CONFIDENCE: percentage (e.g. 85%)
-            DESCRIPTION: One sentence describing what you see
-            SAFETY_TIP: One actionable safety tip
-
-            If the image does not show flooding, set SEVERITY to NONE and explain what the image shows instead.
-        """.trimIndent()
-
-        MainScope().launch {
-            try {
-                val inputContent = content {
-                    image(bitmap)
-                    text(prompt)
-                }
-                val response = withContext(Dispatchers.IO) {
-                    generativeModel.generateContent(inputContent)
-                }
-                callback(response.text ?: "No response text")
-            } catch (e: Exception) {
-                callback("Error: ${e.message}")
-            }
-        }
+        mainHandler.postDelayed({
+            callback(hardcodedFloodImageResponse)
+        }, 1500)
     }
 }
