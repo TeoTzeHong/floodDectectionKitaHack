@@ -154,6 +154,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/tvMapBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_status_safe"
@@ -166,18 +167,18 @@
                 </LinearLayout>
 
                 <FrameLayout
+                    android:id="@+id/frameMapPreview"
                     android:layout_width="match_parent"
                     android:layout_height="180dp"
-                    android:layout_marginTop="12dp">
+                    android:layout_marginTop="12dp"
+                    android:clipChildren="true"
+                    android:clipToPadding="true">
 
-                    <!-- Placeholder for Map Image -->
-                    <ImageView
-                        android:id="@+id/ivMapPreview"
+                    <!-- Animated wind preview -->
+                    <com.example.floodprediction.WindAnimationView
+                        android:id="@+id/windAnimView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_launcher_background" 
-                        android:background="#E1F5FE"/>
+                        android:layout_height="match_parent" />
                     
                     <Button
                         android:id="@+id/btnViewMap"
@@ -285,11 +286,15 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/layoutMetricRain"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:background="@drawable/card_rounded_white"
+                        android:padding="8dp"
+                        android:layout_marginEnd="4dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -309,11 +314,15 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/layoutMetricHumidity"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:background="@drawable/card_rounded_white"
+                        android:padding="8dp"
+                        android:layout_marginHorizontal="4dp">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -333,11 +342,15 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/layoutMetricWind"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:background="@drawable/card_rounded_white"
+                        android:padding="8dp"
+                        android:layout_marginStart="4dp">
 
                         <TextView
                             android:layout_width="wrap_content"

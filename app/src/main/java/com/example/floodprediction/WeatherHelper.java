@@ -23,14 +23,21 @@ public class WeatherHelper {
         public double rainfall;   // mm
         public int humidity;      // %
         public double temperature; // °C
+        public double tempMin;    // °C
+        public double tempMax;    // °C
+        public double windSpeed;  // m/s
         public String description;
         public int riskScore;     // 0-100
         public String riskLevel;  // LOW, MEDIUM, HIGH
 
-        public WeatherData(double rainfall, int humidity, double temperature, String description) {
+        public WeatherData(double rainfall, int humidity, double temperature,
+                           double tempMin, double tempMax, double windSpeed, String description) {
             this.rainfall = rainfall;
             this.humidity = humidity;
             this.temperature = temperature;
+            this.tempMin = tempMin;
+            this.tempMax = tempMax;
+            this.windSpeed = windSpeed;
             this.description = description;
             this.riskScore = calculateRisk();
             this.riskLevel = getRiskLevel();
@@ -45,13 +52,23 @@ public class WeatherHelper {
             else if (rainfall > 5) score += 10;
 
             // Humidity contribution (0-30 points)
-            if (humidity > 90) score += 30;
-            else if (humidity > 80) score += 20;
+            if (humidity > 95) score += 30;
+            else if (humidity > 90) score += 25;
+            else if (humidity > 80) score += 18;
             else if (humidity > 70) score += 10;
+            else if (humidity > 60) score += 5;
+
+            // Wind speed contribution (0-25 points) — using km/h thresholds
+            double windKmh = windSpeed * 3.6;
+            if (windKmh > 90) score += 25;
+            else if (windKmh > 70) score += 20;
+            else if (windKmh > 50) score += 15;
+            else if (windKmh > 30) score += 8;
 
             // Description keywords (0-20 points)
             String desc = description.toLowerCase();
-            if (desc.contains("heavy rain") || desc.contains("thunderstorm")) score += 20;
+            if (desc.contains("thunderstorm") || desc.contains("flash")) score += 20;
+            else if (desc.contains("heavy rain") || desc.contains("storm")) score += 15;
             else if (desc.contains("rain") || desc.contains("drizzle")) score += 10;
             else if (desc.contains("cloud") || desc.contains("mist")) score += 5;
 
@@ -59,9 +76,11 @@ public class WeatherHelper {
         }
 
         private String getRiskLevel() {
-            if (riskScore >= 60) return "HIGH";
-            else if (riskScore >= 30) return "MEDIUM";
-            else return "LOW";
+            if (riskScore >= 80) return "DANGER";
+            else if (riskScore >= 60) return "WARNING";
+            else if (riskScore >= 40) return "ALERT";
+            else if (riskScore >= 20) return "ADVISORY";
+            else return "SAFE";
         }
     }
 
@@ -103,7 +122,15 @@ public class WeatherHelper {
                     JSONObject json = new JSONObject(response.toString());
                     JSONObject main = json.getJSONObject("main");
                     double temp = main.getDouble("temp");
+                    double tempMin = main.optDouble("temp_min", temp - 3);
+                    double tempMax = main.optDouble("temp_max", temp + 3);
                     int humidity = main.getInt("humidity");
+
+                    // Wind
+                    double windSpeed = 0;
+                    if (json.has("wind")) {
+                        windSpeed = json.getJSONObject("wind").optDouble("speed", 0);
+                    }
 
                     // Rainfall (last 1h) - may not always be present
                     double rainfall = 0;
@@ -116,7 +143,8 @@ public class WeatherHelper {
                     String description = json.getJSONArray("weather")
                             .getJSONObject(0).getString("description");
 
-                    WeatherData data = new WeatherData(rainfall, humidity, temp, description);
+                    WeatherData data = new WeatherData(rainfall, humidity, temp,
+                            tempMin, tempMax, windSpeed, description);
                     mainHandler.post(() -> callback.onResult(data));
                 } else {
                     mainHandler.post(() -> callback.onError("API Error: HTTP " + responseCode));
@@ -135,7 +163,7 @@ public class WeatherHelper {
     public void fetchDemoWeather(WeatherCallback callback) {
         mainHandler.postDelayed(() -> {
             // Simulated rainy weather data for demo
-            WeatherData data = new WeatherData(25.4, 88, 27.5, "heavy rain");
+            WeatherData data = new WeatherData(25.4, 88, 27.5, 25.0, 30.0, 12.5, "heavy rain");
             callback.onResult(data);
         }, 1500); // Simulate network delay
     }

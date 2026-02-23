@@ -42,4 +42,18 @@
     <color name="status_red_bg">#FFCDD2</color>
     <color name="nav_item_selected">#FF5722</color>
     <color name="nav_item_unselected">#9E9E9E</color>
+
+    <!-- Weather Metric Severity Backgrounds -->
+    <color name="metric_safe_bg">#E8F5E9</color>
+    <color name="metric_warn_bg">#FFF3E0</color>
+    <color name="metric_danger_bg">#FFEBEE</color>
+
+    <!-- Weather Metric Severity Text -->
+    <color name="metric_safe_text">#2E7D32</color>
+    <color name="metric_warn_text">#E65100</color>
+    <color name="metric_danger_text">#C62828</color>
+
+    <!-- Status Card Backgrounds -->
+    <color name="status_warn_bg">#FFE0B2</color>
+    <color name="status_danger_bg">#FFCDD2</color>
 </resources>

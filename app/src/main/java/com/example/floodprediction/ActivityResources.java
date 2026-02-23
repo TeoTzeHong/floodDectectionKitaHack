@@ -32,6 +32,37 @@ public class ActivityResources extends AppCompatActivity {
     private void setupHeader() {
         ImageView btnBack = findViewById(R.id.btnBack);
         btnBack.setOnClickListener(v -> finish());
+        
+        // Setup Search/Settings mock
+        findViewById(R.id.btnViewMapShelters).setOnClickListener(v -> {
+            startActivity(new Intent(this, MapActivity.class));
+        });
+        
+        setupInteractiveElements();
+    }
+
+    private void setupInteractiveElements() {
+        // Emergency Calls
+        findViewById(R.id.btnCallFire).setOnClickListener(v -> dialEmergency("999"));
+        findViewById(R.id.btnCallPolice).setOnClickListener(v -> dialEmergency("999"));
+
+        // Categories (Mock Toast)
+        setCategoryListener(R.id.btnCatShelters, "Shelters filtered");
+        setCategoryListener(R.id.btnCatMedical, "Medical Aid filtered");
+        setCategoryListener(R.id.btnCatWater, "Clean Water filtered");
+        setCategoryListener(R.id.btnCatRelief, "Relief Goods filtered");
+    }
+
+    private void dialEmergency(String number) {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(android.net.Uri.parse("tel:" + number));
+        startActivity(intent);
+    }
+
+    private void setCategoryListener(int id, String message) {
+        findViewById(id).setOnClickListener(v -> 
+            android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_SHORT).show()
+        );
     }
 
     private void setupBottomNavigation() {

@@ -168,6 +168,7 @@
                                 android:textSize="12sp" />
 
                             <TextView
+                                android:id="@+id/btnCallFire"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="16dp"
@@ -175,7 +176,7 @@
                                 android:backgroundTint="#F57C00"
                                 android:gravity="center"
                                 android:padding="8dp"
-                                android:text="📞 911"
+                                android:text="📞 999"
                                 android:textColor="#FFFFFF"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -224,6 +225,7 @@
                                 android:textSize="12sp" />
 
                             <TextView
+                                android:id="@+id/btnCallPolice"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="16dp"
@@ -231,7 +233,7 @@
                                 android:backgroundTint="#F57C00"
                                 android:gravity="center"
                                 android:padding="8dp"
-                                android:text="📞 911"
+                                android:text="📞 999"
                                 android:textColor="#FFFFFF"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -266,6 +268,7 @@
 
                 <!-- Shelters -->
                 <LinearLayout
+                    android:id="@+id/btnCatShelters"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
@@ -295,6 +298,7 @@
 
                 <!-- Medical Aid -->
                 <LinearLayout
+                    android:id="@+id/btnCatMedical"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
@@ -324,6 +328,7 @@
 
                 <!-- Clean Water -->
                 <LinearLayout
+                    android:id="@+id/btnCatWater"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
@@ -352,6 +357,7 @@
 
                 <!-- Relief Goods -->
                 <LinearLayout
+                    android:id="@+id/btnCatRelief"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
@@ -397,6 +403,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/btnViewMapShelters"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="View Map"
