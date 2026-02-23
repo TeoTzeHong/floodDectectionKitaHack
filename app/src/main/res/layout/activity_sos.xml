@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#121212">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/tvSosTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EMERGENCY SOS"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            android:textColor="#F44336"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="30dp"/>
+
+        <!-- SOS Button -->
+        <FrameLayout
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginBottom="24dp">
+
+            <ImageButton
+                android:id="@+id/btnSos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/sos_button_bg"
+                android:src="@drawable/ic_sos_icon"
+                android:scaleType="centerInside"
+                android:contentDescription="SOS Button"
+                android:elevation="10dp"
+                android:padding="20dp"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tvSosStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Press and hold for 3 seconds"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp"
+            android:textAlignment="center"
+            android:layout_marginBottom="12dp"/>
+
+        <TextView
+            android:id="@+id/tvSosLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="📍 Location: Detecting..."
+            android:textColor="#B0BEC5"
+            android:textSize="24sp"
+            android:layout_marginBottom="20dp"/>
+
+        <ProgressBar
+            android:id="@+id/progressBarSos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:indeterminateTint="#F44336"/>
+
+        <!-- ═══ ETA Card (shown after rescue dispatched) ═══ -->
+        <LinearLayout
+            android:id="@+id/layoutEtaCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1E1E1E"
+            android:padding="16dp"
+            android:layout_marginTop="16dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🚑 Rescue Team Status"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:layout_marginBottom="10dp"/>
+
+            <!-- Rescue Status Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Status: "
+                    android:textColor="#9E9E9E"
+                    android:textSize="13sp"/>
+
+                <TextView
+                    android:id="@+id/tvRescueStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="—"
+                    android:textColor="#FF9800"
+                    android:textStyle="bold"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+            <!-- ETA Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🕐 ETA: "
+                    android:textColor="#9E9E9E"
+                    android:textSize="13sp"/>
+
+                <TextView
+                    android:id="@+id/tvUserEta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Calculating..."
+                    android:textColor="#4FC3F7"
+                    android:textStyle="bold"
+                    android:textSize="18sp"/>
+            </LinearLayout>
+
+            <!-- Distance Row -->
+            <TextView
+                android:id="@+id/tvUserDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#757575"
+                android:textSize="12sp"/>
+
+            <!-- Last Updated -->
+            <TextView
+                android:id="@+id/tvEtaUpdated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#555555"
+                android:textSize="11sp"
+                android:layout_marginTop="4dp"/>
+        </LinearLayout>
+
+        <!-- Cancel Button -->
+        <Button
+            android:id="@+id/btnCancelSos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cancel Request"
+            android:backgroundTint="#555555"
+            android:textColor="#FFFFFF"
+            android:visibility="gone"
+            android:layout_marginTop="20dp"/>
+
+    </LinearLayout>
+</ScrollView>
