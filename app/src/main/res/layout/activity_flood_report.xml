@@ -183,7 +183,7 @@
                 android:layout_marginTop="12dp"
                 android:background="@drawable/btn_spinner"
                 android:popupBackground="@color/accent"
-                android:padding="8dp" />
+                android:padding="0dp"/>
         </LinearLayout>
 
         <!-- ═══════════════════════════════════ -->

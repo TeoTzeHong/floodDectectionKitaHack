@@ -1,5 +1,7 @@
 package com.example.floodprediction;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import java.io.InputStream;
 
@@ -49,10 +52,10 @@ public class FloodReportActivity extends AppCompatActivity {
     };
 
     private static final double[][] COORDS = {
-            {3.1390, 101.6869}, {5.4164, 100.3327}, {1.4927, 103.7414},
-            {1.5535, 110.3593}, {5.9804, 116.0735}, {3.0738, 101.5183},
-            {4.5975, 101.0901}, {3.8077, 103.3260}, {2.1896, 102.2501},
-            {6.1254, 102.2381}, {6.1184, 100.3685}, {2.7258, 101.9424}
+            { 3.1390, 101.6869 }, { 5.4164, 100.3327 }, { 1.4927, 103.7414 },
+            { 1.5535, 110.3593 }, { 5.9804, 116.0735 }, { 3.0738, 101.5183 },
+            { 4.5975, 101.0901 }, { 3.8077, 103.3260 }, { 2.1896, 102.2501 },
+            { 6.1254, 102.2381 }, { 6.1184, 100.3685 }, { 2.7258, 101.9424 }
     };
 
     // Gallery picker
@@ -64,14 +67,14 @@ public class FloodReportActivity extends AppCompatActivity {
                         ivPhoto.setImageURI(uri);
                         InputStream is = getContentResolver().openInputStream(uri);
                         selectedBitmap = BitmapFactory.decodeStream(is);
-                        if (is != null) is.close();
+                        if (is != null)
+                            is.close();
                         onImageSelected();
                     } catch (Exception e) {
                         Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
                     }
                 }
-            }
-    );
+            });
 
     // Camera (returns thumbnail bitmap — works on emulator)
     private final ActivityResultLauncher<Void> takePhoto = registerForActivityResult(
@@ -82,8 +85,21 @@ public class FloodReportActivity extends AppCompatActivity {
                     selectedBitmap = bitmap;
                     onImageSelected();
                 }
-            }
-    );
+            });
+
+    // Camera permission launcher (declared after takePhoto to avoid forward
+    // reference)
+    private final ActivityResultLauncher<String> requestCameraPermission = registerForActivityResult(
+            new ActivityResultContracts.RequestPermission(),
+            granted -> {
+                if (granted) {
+                    takePhoto.launch(null);
+                } else {
+                    Toast.makeText(this,
+                            "Camera permission is required to take photos",
+                            Toast.LENGTH_LONG).show();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,12 +122,19 @@ public class FloodReportActivity extends AppCompatActivity {
 
         // Location spinner
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_item, LOCATIONS);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                this, R.layout.spinner_item_black, LOCATIONS);
+        adapter.setDropDownViewResource(R.layout.spinner_item_black);
         spinnerLocation.setAdapter(adapter);
 
         // Photo buttons
-        btnTakePhoto.setOnClickListener(v -> takePhoto.launch(null));
+        btnTakePhoto.setOnClickListener(v -> {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                takePhoto.launch(null);
+            } else {
+                requestCameraPermission.launch(Manifest.permission.CAMERA);
+            }
+        });
         btnPickGallery.setOnClickListener(v -> pickImage.launch("image/*"));
 
         // Verify button
@@ -129,7 +152,8 @@ public class FloodReportActivity extends AppCompatActivity {
     }
 
     private void verifyWithAI() {
-        if (selectedBitmap == null) return;
+        if (selectedBitmap == null)
+            return;
 
         progressVerify.setVisibility(View.VISIBLE);
         btnVerify.setEnabled(false);
@@ -150,8 +174,7 @@ public class FloodReportActivity extends AppCompatActivity {
                         parseAIResponse(response);
                     });
                     return null;
-                }
-        );
+                });
     }
 
     private void parseAIResponse(String response) {
@@ -181,9 +204,8 @@ public class FloodReportActivity extends AppCompatActivity {
 
             tvFloodStatus.setText("✅ FLOOD CONFIRMED — " + detectedSeverity + " severity");
             tvFloodStatus.setTextColor(getResources().getColor(
-                    detectedSeverity.equals("HIGH") ? R.color.risk_high :
-                            detectedSeverity.equals("MEDIUM") ? R.color.risk_medium : R.color.risk_low
-            ));
+                    detectedSeverity.equals("HIGH") ? R.color.risk_high
+                            : detectedSeverity.equals("MEDIUM") ? R.color.risk_medium : R.color.risk_low));
 
             btnSubmit.setVisibility(View.VISIBLE);
             btnSubmit.setEnabled(true);
@@ -197,7 +219,8 @@ public class FloodReportActivity extends AppCompatActivity {
     }
 
     private void submitReport() {
-        if (!floodConfirmed) return;
+        if (!floodConfirmed)
+            return;
 
         int idx = spinnerLocation.getSelectedItemPosition();
         double lat = COORDS[idx][0];
